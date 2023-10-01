@@ -48,7 +48,7 @@
                         @foreach (var invite in Model.sentInvites)
                         {
                             <tr>
-                                <td>http://economy-simulator.org/auth/signup?inviteId=@invite.id</td>
+                                <td>https://example.com/auth/signup?inviteId=@invite.id</td>
                                 @if (invite.userId == null)
                                 {
                                     <td>No</td>

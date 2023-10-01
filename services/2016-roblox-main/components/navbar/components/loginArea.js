@@ -39,7 +39,7 @@ const LoginArea = props => {
       <div className='row'>
         <div className='col-6'>
           <p className={s.text}>
-            <a className={s.link} >
+            <a className={s.link}>
               Sign Up
             </a>
           </p>
@@ -48,7 +48,7 @@ const LoginArea = props => {
           <p className={s.text}>
             <a className={s.link} onClick={(e) => {
               e.preventDefault();
-              if (getFlag('requireLoginThroughCookie', false)) {
+              if (getFlag('requireLoginThroughCookie', true)) {
                 if (getFlag('clientSideRenderingEnabled', false)) {
                   Router.push('/login');
                 }else{

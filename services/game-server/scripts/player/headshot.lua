@@ -1,7 +1,7 @@
 local jobId = "InsertJobIdHere";
 local userId = 65789275746246;
 local mode = 'R6'
-local baseURL = "http://economy-simulator.org";
+local baseURL = "http://localhost";
 local uploadURL = "UPLOAD_URL_HERE";
 
 local function applyMesh(Player, children, limb)
@@ -29,8 +29,14 @@ local function applyPackage(Player, children)
     local ok, msg = pcall(function() 
         print("applyPackage children", children, #children)
         for _, asset in pairs(children) do
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Child package",asset)
-            asset.Parent = Player.Character
+             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Child package",asset)
+             if asset.Name == "R6" then
+                print("!!!!!!!!!!!!!!!!!!! GOT R6",asset)
+                local otherChildren = asset:GetChildren()
+                print("other",otherChildren, #otherChildren)
+                print(otherChildren[1].Name)
+                otherChildren[1].Parent = Player.Character
+             end
         end
     end)
     if not ok then
@@ -60,7 +66,7 @@ end
     HttpService.HttpEnabled = true
     ScriptContext.ScriptsDisabled = true
     Lighting.Outlines = false
-    ContentProvider:SetBaseUrl('http://economy-simulator.org')
+    ContentProvider:SetBaseUrl('http://localhost')
     game:GetService("ContentProvider"):SetAssetUrl(baseURL .. "/Asset/")
     game:GetService("InsertService"):SetAssetUrl(baseURL .. "/Asset/?id=%d")
     pcall(function() game:GetService("ScriptInformationProvider"):SetAssetUrl(url .. "/Asset/") end)
@@ -167,13 +173,11 @@ end
         local FFlagOnlyCheckHeadAccessoryInHeadShot = false
         local cameraOffsetX = 0
         local cameraOffsetY = 0
-        local maxHatZoom = 100
-        local baseHatZoom = 30
+        local maxHatZoom = 60
+        local baseHatZoom = 40
 
 
         local maxDimension = 0
-
-        local quadratic = true
 
 
     -- Remove gear
@@ -199,27 +203,48 @@ end
 
 	-- Setup Camera
 	local maxHatOffset = 0.5 -- Maximum amount to move camera upward to accomodate large hats
-    maxDimension = math.min(1, maxDimension / 3) -- Confine maxdimension to specific bounds
+	maxDimension = math.min(1, maxDimension / 3) -- Confine maxdimension to specific bounds
 
-    if quadratic then
-        maxDimension = maxDimension * maxDimension -- Zoom out on quadratic interpolation
-    end
+	if quadratic then
+		maxDimension = maxDimension * maxDimension -- Zoom out on quadratic interpolation
+	end
 
-    local viewOffset     = player.Character.Head.CFrame * CFrame.new(cameraOffsetX, cameraOffsetY + maxHatOffset * maxDimension, 0.1) -- View vector offset from head
+	local viewOffset     = player.Character.Head.CFrame * CFrame.new(cameraOffsetX, cameraOffsetY + maxHatOffset * maxDimension, 0.1) -- View vector offset from head
 
-    local yAngle = -math.pi / 16
-	
+	local yAngle = -math.pi / 16
+	if FFlagNewHeadshotLighting then
+		yAngle = 0 -- Camera is looking straight at avatar's face.
+	end
 	local positionOffset = player.Character.Head.CFrame + (CFrame.Angles(0, yAngle, 0).lookVector.unit * 3) -- Position vector offset from head
 
-    local camera = Instance.new("Camera", player.Character)-- Instance.new("Camera", player.Character)
-    camera.Name = "ThumbnailCamera"
-    camera.CameraType = Enum.CameraType.Scriptable
-    camera.CoordinateFrame = CFrame.new(positionOffset.p, viewOffset.p)
-    camera.FieldOfView = baseHatZoom + (maxHatZoom - baseHatZoom) * maxDimension
+	local camera = game.Workspace.CurrentCamera;-- Instance.new("Camera", player.Character)
+	-- camera.Name = "ThumbnailCamera"
+	camera.CameraType = Enum.CameraType.Scriptable
+	camera.CoordinateFrame = CFrame.new(positionOffset.p, viewOffset.p)
+	camera.FieldOfView = baseHatZoom + (maxHatZoom - baseHatZoom) * maxDimension
     print("cam fov",camera.FieldOfView)
 
-	workspace.CurrentCamera = camera
-    
+    -- camera.FieldOfView = 70
+    print("cam fov",camera.FieldOfView)
+
+	if FFlagNewHeadshotLighting then
+		-- New lighting setup: we want a light slightly in front of, to the right, and above the character.
+		-- Adding Part to be anchor of light. For 3D thumbnails (like full avatar) we should be careful about adding parts as this can affect the bounds.
+		local part = Instance.new("Part")
+		part.Parent = game.Workspace
+		part.Anchored = true
+		part.Transparency = 1
+
+		local light = Instance.new("PointLight")
+		light.Color = Color3.new(255/255, 255/255, 255/255)
+		light.Brightness = 3
+		light.Range = 10
+		light.Parent = part
+		light.Shadows = true
+
+		part.Position = Vector3.new(-5,110,-5)
+	end
+
         local avatarEncoded = ThumbnailGenerator:Click('png', _X_RES_, _Y_RES_, true, true)
         print("[debug] [player/headshot] send post request containing avatar")
         HttpService:PostAsync(uploadURL, HttpService:JSONEncode({

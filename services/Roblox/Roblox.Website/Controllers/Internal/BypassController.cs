@@ -90,7 +90,7 @@ namespace Roblox.Website.Controllers
 
         private bool IsRcc()
         {
-            var rccAccessKey = Request.Headers.ContainsKey("accessKey") ? Request.Headers["accessKey"].ToString() : null;
+            var rccAccessKey = Request.Headers.ContainsKey("accesskey") ? Request.Headers["accesskey"].ToString() : null;
             var isRcc = rccAccessKey == Configuration.RccAuthorization;
             return isRcc;
         }
@@ -216,9 +216,8 @@ namespace Roblox.Website.Controllers
             }
             if (details.is18Plus && !isRcc && !isBotRequest && !is18OrOver)
                 throw new RobloxException(400, 0, "AssetTemporarilyUnavailable");
-                // details.moderationStatus != ModerationStatus.ReviewApproved (removing the thing where your asset has to be approved)
-            //if (!isRcc && !isBotRequest)
-            //    throw new RobloxException(403, 0, "Asset not approved for requester");
+            if (details.moderationStatus != ModerationStatus.ReviewApproved && !isRcc && !isBotRequest)
+                throw new RobloxException(403, 0, "Asset not approved for requester");
             
             var latestVersion = await services.assets.GetLatestAssetVersion(assetId);
             Stream? assetContent = null;
@@ -354,7 +353,7 @@ namespace Roblox.Website.Controllers
                         }
                     }
 
-                    if (latestVersion.contentUrl != null)
+                    if (ok && latestVersion.contentUrl != null)
                     {
                         assetContent = await services.assets.GetAssetContent(latestVersion.contentUrl);
                     }
@@ -1026,6 +1025,44 @@ namespace Roblox.Website.Controllers
                 data = request.data,
             };
         }
+
+#if DEBUG
+        [HttpGetBypass("integration-test/create-account-and-set-cookie")]
+        public async Task<string> CreateAccountAndSetCookie()
+        {
+            var name = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 14);
+            var result = await services.users.CreateUser(name, "AmogusDrip69", Gender.Male);
+            await services.users.InsertOrUpdateMembership(result.userId, MembershipType.BuildersClub);
+            var id = await services.users.CreateApplication(new CreateUserApplicationRequest()
+            {
+                about = "Integration test",
+                socialPresence = "",
+                isVerified = true,
+                verifiedUrl = "https://example.com/",
+                verificationPhrase = "Integration test",
+                verifiedId = "1",
+            });
+            var joinId = await services.users.ProcessApplication(id, 1, UserApplicationStatus.Approved);
+            await services.users.SetApplicationUserIdByJoinId(joinId, result.userId);
+            
+            var sess = await services.users.CreateSession(result.userId);
+            var sessionCookie = Roblox.Website.Middleware.SessionMiddleware.CreateJwt(new Middleware.JwtEntry()
+            {
+                sessionId = sess,
+                createdAt = DateTimeOffset.Now.ToUnixTimeSeconds(),
+            });
+            Response.Cookies.Append(SessionMiddleware.CookieName, sessionCookie, new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                IsEssential = true,
+                Expires = DateTimeOffset.Now.AddDays(1),
+                Path = "/",
+            });
+            return "Created user " + name + "...\nOK";
+        }
+#endif
     }
 }
 

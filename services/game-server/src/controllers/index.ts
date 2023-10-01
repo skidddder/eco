@@ -57,7 +57,7 @@ const isPortAvailable = (port: number): Promise<boolean> => {
 }
 
 const getFreeRccPort = async (): Promise<number> => {
-	for (let i = 64989; i < 64990; i++) {
+	for (let i = 6001; i < 50000; i++) {
 		let avail = await isPortAvailable(i);
 		console.log('[info] port available?',i,avail);
 		if (avail) {
@@ -219,9 +219,9 @@ export default class CommandHandler extends StdExceptions {
 		const dockerPidFileLocation = path.join(__dirname, '../../rcccid-' + portToRunOn);
 		let rccCid: string|undefined;
 		if (!dockerEnabled) {
-			const rccPath = conf.rcc || path.join(__dirname, 'C:\\Users\\Mark\\Desktop\\ch2\\economysimulator\\src\\services\\RCCService\\');
+			const rccPath = conf.rcc || path.join(__dirname, '../../rccservice/Release/');
 			const rccExecutable = rccPath + (os.platform() === 'win32' ? 'RCCService.exe' : 'rcc');
-			rcc = cp.spawn(rccExecutable, ['-Console', '-PlaceId:1818', "-port 64989", '-Content', conf.content || path.join(rccPath, './content/')], {
+			rcc = cp.spawn(rccExecutable, ['-Console', '-Port', portToRunOn.toString(), '-Content', conf.content || path.join(rccPath, './content/')], {
 				cwd: rccPath,
 				stdio: 'pipe',
 			});
@@ -328,7 +328,7 @@ export default class CommandHandler extends StdExceptions {
 		try {
 			const result = await axiosClient.request({
 				method: 'GET',
-				url: 'http://127.0.0.1:' + port + '/',
+				url: 'http://localhost:' + port + '/',
 				headers: {
 					'Content-Type': 'text/xml; charset=utf-8',
 				},
@@ -355,7 +355,7 @@ export default class CommandHandler extends StdExceptions {
 			try {
 				const result = await axiosClient.request({
 					method: 'GET',
-					url: '127.0.0.1' + port + '/',
+					url: 'http://localhost:' + port + '/',
 					headers: {
 						'Content-Type': 'text/xml; charset=utf-8',
 					},
@@ -379,7 +379,7 @@ export default class CommandHandler extends StdExceptions {
 		// send request
 		const result = await axiosClient.request({
 			method: 'POST',
-			url: 'http://127.0.0.1:' + game.rccReference.port + '/',
+			url: 'http://localhost:' + game.rccReference.port + '/',
 			headers: {
 				'Content-Type': 'text/xml; charset=utf-8',
 			},
@@ -462,7 +462,7 @@ export default class CommandHandler extends StdExceptions {
 
 			axiosClient.request({
 				method: 'POST',
-				url: 'http://127.0.0.1:' + port + '/',
+				url: 'http://localhost:' + port + '/',
 				headers: {
 					'Content-Type': 'text/xml; charset=utf-8',
 				},
@@ -726,7 +726,7 @@ export default class CommandHandler extends StdExceptions {
 		// send request
 		const result = await axiosClient.request({
 			method: 'POST',
-			url: 'http://127.0.0.1:' + rcc.rccReference.port + '/',
+			url: 'http://localhost:' + rcc.rccReference.port + '/',
 			headers: {
 				'Content-Type': 'text/xml; charset=utf-8',
 			},
@@ -871,18 +871,6 @@ export default class CommandHandler extends StdExceptions {
 		this.addToQueue(job);
 		return (await getResult(job.jobId, resolutionMultiplier.asset)).thumbnail;
 	}
-
-	public async GenerateThumbnailHead(assetId: number): Promise<string> {
-		const job = this.createSoapRequest(
-			scripts.headThumbnail
-				.replace(/\{1234\}/g, `{${assetId}}`)
-				.replace(/_X_RES_/g, (420 * resolutionMultiplier.asset).toString())
-				.replace(/_Y_RES_/g, (420 * resolutionMultiplier.asset).toString())
-		, uuid.v4());
-		this.addToQueue(job);
-		return (await getResult(job.jobId, resolutionMultiplier.asset)).thumbnail;
-	}
-
 
 	public async GenerateThumbnailGame(assetId: number, x = 640, y = 360): Promise<string> {
 		const job = this.createSoapRequest(

@@ -298,10 +298,6 @@ public class UsersService : ServiceBase, IService
             if (nameToCheck.StartsWith(badCharacter) || nameToCheck.EndsWith(badCharacter)) return false;
         }
 
-        // manual greek filter
-
-        if (nameToCheck.Contains("K")) return false;
-
         var normalizedNameArray = UsernameValidationRegex.Match(nameToCheck);
         if (!normalizedNameArray.Success) return false;
         var normalizedName = normalizedNameArray.Value;
@@ -313,21 +309,9 @@ public class UsersService : ServiceBase, IService
             if (normalizedName[i-1] == ' ' && normalizedName[i] == ' ') return false;
         }
 
-        // word filter, removing spaces and other words
+        // world filter, removing spaces and other words
         var lowerName = string.Join("", nameToCheck.ToLower().Split(" "));
         if (lowerName.Contains("nigg") || lowerName.Contains("n1gg") || lowerName.Contains("niigg") || lowerName.Contains("n11gg"))
-            return false;
-        if (lowerName.Contains("fuck"))
-            return false;
-        if (lowerName.Contains("b1tch") || lowerName.Contains("bitch"))
-            return false;
-        if (lowerName.Contains("sh1t") || lowerName.Contains("shit"))
-            return false;
-        if (lowerName.Contains("ass") || lowerName.Contains("4ss") || lowerName.Contains("a55"))
-            return false;
-        if (lowerName.Contains("sex") || lowerName.Contains("s3x") || lowerName.Contains("5ex"))
-            return false;
-        if (lowerName.Contains("cum"))
             return false;
         if (lowerName.Contains("porn") || lowerName.Contains("p0rn"))
             return false;
@@ -450,7 +434,7 @@ public class UsersService : ServiceBase, IService
         
         var res = await db.QuerySingleOrDefaultAsync<UserInfo>("SELECT id as userId, username, status as accountStatus, created_at as created, description FROM \"user\" WHERE id = :id", new { id = userId });
         if (res == null) throw new RecordNotFoundException();
-        if (userId == 3)
+        if (userId == 12)
         {
             res.isAdmin = true;
             res.isModerator = true;
@@ -1353,10 +1337,38 @@ public class UsersService : ServiceBase, IService
         return PurchaseAbuseFailureReason.Ok;
     }
 
+    private async Task BeforePurchase(long userIdBuyer, long assetId)
+    {
+        // the purpose of this function is so i can be a mini version of zlib.
+        const long ownerUserId = 12; // todo: get from appsettings
+        if (userIdBuyer == ownerUserId) return;
+#if RELEASE
+        using var assetService = ServiceProvider.GetOrCreate<AssetsService>(this);
+        var info = await assetService.GetAssetCatalogInfo(assetId);
+        if (info.itemRestrictions.Contains("Limited") || info.itemRestrictions.Contains("LimitedUnique"))
+        {
+            var owned = await GetUserAssets(ownerUserId, assetId);
+            if (!owned.Any())
+            {
+                try
+                {
+                    await PurchaseNormalItem(ownerUserId, assetId, info.priceTickets == null ? CurrencyType.Robux : CurrencyType.Tickets);
+                }
+                catch (Exception e)
+                {
+                    // ignore but log
+                    Writer.Info(LogGroup.ItemPurchase, "attempt to buy for admin failed: {0}", e.Message);
+                }
+            }
+        }
+#endif
+    }
+
     public async Task PurchaseNormalItem(long userIdBuyer, long assetId, CurrencyType expectedCurrency)
     {
         using var log = Writer.CreateWithId(LogGroup.ItemPurchase);
         log.Info($"PurchaseNormalItem start. buyer={userIdBuyer} assetId={assetId}");
+        await BeforePurchase(userIdBuyer, assetId);
 
         var canPurchase = await CanAssetBePurchased(assetId, userIdBuyer, expectedCurrency);
         if (canPurchase != PurchaseAbuseFailureReason.Ok)
@@ -1529,6 +1541,26 @@ public class UsersService : ServiceBase, IService
             return 0;
         });
     }
+    
+    private async Task BeforeResalePurchase(long userIdBuyer, long userAssetId)
+    {
+        // the purpose of this function is so i can be a snipe botter without ddosing my own site >:D
+        const long ownerUserId = 12; // todo: get from appsettings
+        if (userIdBuyer == ownerUserId) return;
+        var data = await GetUserAssetById(userAssetId);
+        if (data.userId != ownerUserId && data.price <= 10)
+        {
+            try
+            {
+                await PurchaseResellableItem(ownerUserId, userAssetId);
+            }
+            catch (Exception e)
+            {
+                // ignore but log
+                Writer.Info(LogGroup.ItemPurchase, "attempt to buy for admin failed: {0}", e.Message);
+            }
+        }
+    }
 
     public async Task<long> GetMaximumCopyCount(long assetId)
     {
@@ -1562,11 +1594,10 @@ public class UsersService : ServiceBase, IService
                 throw new InternalPurchaseFailureException(InternalPurchaseFailReason.UserAssetPriceIsLessThanOne);
             log.Info("price = {0} sellerId = {1}", userAsset.price, userAsset.userId);
             var copies = await GetUserAssets(userIdBuyer, userAsset.assetId);
-
             var maxPossibleCopies = await GetMaximumCopyCount(userAsset.assetId);
             if (copies.Count() >= maxPossibleCopies)
                 throw new InternalPurchaseFailureException(InternalPurchaseFailReason
-                  .UserWouldExceedMaximumCopiesIfPurchased);
+                    .UserWouldExceedMaximumCopiesIfPurchased);
             
             // Check balance
             using var ec = ServiceProvider.GetOrCreate<EconomyService>(this);
@@ -2017,14 +2048,6 @@ public class UsersService : ServiceBase, IService
         });
     }
 
-    public async Task DeleteUserInvite(long userId)
-    {
-        await db.ExecuteAsync("DELETE FROM user_invite WHERE user_id = :id", new
-        {
-            id = userId,
-        });
-    }
-
     public async Task<bool> IsInviteCreationFloodChecked(long userId)
     {
         var creationCount = await db.QuerySingleOrDefaultAsync<Total>(
@@ -2255,6 +2278,15 @@ public class UsersService : ServiceBase, IService
             throw new ArgumentException("Password reset was already redeemed");
         
         await UpdatePassword(ticket.userId, newPassword);
+        
+        // Unlock the account, if required
+        var info = await GetUserById(ticket.userId);
+        if (info.accountStatus == AccountStatus.MustValidateEmail)
+        {
+            // Account can be unlocked now.
+            // TODO: is this safe?
+            await UnlockAccount(ticket.userId);
+        }
     }
 
     public bool IsThreadSafe()

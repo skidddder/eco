@@ -236,7 +236,7 @@ const UserFriends = props => {
                           </p>
                         </div>
                         {
-                          (canRemoveUser || tab == "Followings") ? <div className='d-inline-block float-end font-size-30 text-dark'>
+                          canRemoveUser ? <div className='d-inline-block float-end font-size-30 text-dark'>
                             <Dropdown2016 options={[
                               {
                                 name: tab === 'Friends' ? 'Remove' : 'Unfollow',
@@ -303,7 +303,7 @@ const UserFriends = props => {
           }
           return true;
         }} previousPageAvailable={() => {
-          if (tab === 'Friends' || "Followings") {
+          if (tab === 'Friends') {
             if ((page - 1) < 1) {
               return false;
             }
@@ -314,14 +314,14 @@ const UserFriends = props => {
           }
           return true;
         }} loadNextPage={() => {
-          if (tab === 'Friends' || "Followings") {
+          if (tab === 'Friends') {
             return setPage(page+1);
           }
           if (!followEntries.nextPageCursor) return
           setPage(page + 1);
           setCursor(followEntries.nextPageCursor);
         }} loadPreviousPage={() => {
-          if (tab === 'Friends' || "Followings") {
+          if (tab === 'Friends') {
             return setPage(page-1);
           }
           if (!followEntries.previousPageCursor) return

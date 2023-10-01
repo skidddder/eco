@@ -99,34 +99,6 @@ const CategorySelection = props => {
       value: 8,
     },
     {
-      name: 'Hair',
-      value: 41,
-    },
-    {
-      name: 'Face',
-      value: 42,
-    },
-    {
-      name: 'Neck',
-      value: 43,
-    },
-    {
-      name: 'Shoulder',
-      value: 44,
-    },
-    {
-      name: 'Front',
-      value: 45,
-    },
-    {
-      name: 'Back',
-      value: 46,
-    },
-    {
-      name: 'Waist',
-      value: 47,
-    },
-    {
       name: 'T-Shirts',
       value: 2,
     },
@@ -139,10 +111,42 @@ const CategorySelection = props => {
       value: 12,
     },
     {
+      name: 'Decals',
+      value: 13,
+    },
+    {
+      name: 'Models',
+      value: 10,
+    },
+    {
+      name: 'Plugins',
+      value: 38,
+    },
+    {
+      name: 'Animations',
+      value: 24,
+    },
+    {
+      name: 'Places',
+      value: 9,
+    },
+    {
+      name: 'Game Passes',
+      value: 34,
+    },
+    {
+      name: 'Audio',
+      value: 3,
+    },
+    {
+      name: 'Badges',
+      value: 21,
+    },
+    {
       name: 'Torsos',
       value: 27,
     },
-    getFlag('packagesEnabled', true) && {
+    getFlag('packagesEnabled', false) && {
       name: 'Packages',
       value: 32,
     },

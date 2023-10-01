@@ -69,8 +69,6 @@ public class ApplicationService : ServiceBase, IService
         "earthquake",
         "sunburn",
         "laptop",
-        "aep",
-        "arz",
         "desktop",
         "tablet",
         "cellphone",

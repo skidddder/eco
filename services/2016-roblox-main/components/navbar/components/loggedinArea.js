@@ -109,18 +109,18 @@ const LoggedInArea = props => {
         <p className={s.text + ' ' + s.robuxText} title={authStore.robux.toLocaleString()}>
           <span>{abbreviateNumber(authStore.robux)}</span>
         </p>
-        <>
-          <p className={s.text} title={authStore.tix.toLocaleString()}>
-            <Link href='/My/Money.aspx'>
-              <a>
-                <span className='icon-nav-tix'/>
-              </a>
-            </Link>
-          </p>
-          <p className={s.text + ' ' + s.robuxText}>
-            <span title={authStore.tix.toLocaleString()}>{abbreviateNumber(authStore.tix)}</span>
-          </p>
-        </>
+        {getFlag('showTicketBalace', false) ? <>
+        <p className={s.text} title={authStore.tix.toLocaleString()}>
+          <Link href='/My/Money.aspx'>
+            <a>
+              <span className='icon-nav-tix'/>
+            </a>
+          </Link>
+        </p>
+        <p className={s.text + ' ' + s.robuxText}>
+          <span title={authStore.tix.toLocaleString()}>{abbreviateNumber(authStore.tix)}</span>
+        </p>
+        </> : null}
         <p className={s.text}>
           <a onClick={(e) => {
             e.preventDefault();

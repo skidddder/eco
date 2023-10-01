@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>Create Player</title>
+	<title>Give Robux</title>
 </svelte:head>
 
 <Main>
@@ -49,15 +49,14 @@
 					request
 						.post("/create-user", {
 							// @ts-ignore
-							userId: document.getElementById("user-id").value || null,
+							userId: document.getElementById("user-id").value,
 							// @ts-ignore
 							username: document.getElementById("username").value,
 							// @ts-ignore
 							password: document.getElementById("password").value,
 						})
 						.then((d) => {
-							let id = document.getElementById("user-id").value
-							navigate(`/admin/manage-user/${id}`);
+							navigate("/admin/manage-user/" + d.data.userId);
 						})
 						.catch((e) => {
 							errorMessage = e.message;

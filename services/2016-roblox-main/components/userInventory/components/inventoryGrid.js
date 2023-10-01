@@ -23,7 +23,7 @@ const InventoryGrid = props => {
   const showPaging = store.data && !isEmpty;
 
   let total = store.data ? (store.data?.TotalItems?.toLocaleString() || 'many') : null; // roblox started returning "null" for TotalItems :(
-  if (myPage === 1 && store.data.Items.length <= 24) {
+  if (myPage === 1 && store.data.Items.length <= getFlag('inventoryPageLimit', 24)) {
     total = '1';
   }
 

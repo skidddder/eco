@@ -12,7 +12,7 @@ const getBaseUrl = () => {
 
 const getUrlWithProxy = (url) => {
   if (config.publicRuntimeConfig.backend.proxyEnabled)
-    return '' + (url);
+    return '/api/proxy?url=' + encodeURIComponent(url);
   return url;
 }
 

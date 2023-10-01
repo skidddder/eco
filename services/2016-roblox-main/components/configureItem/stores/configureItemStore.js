@@ -33,7 +33,7 @@ const ConfigureItemStore = createContainer(() => {
       setPrice(newDetails.price);
       setCommentsEnabled(newDetails.commentsEnabled);
       setGenres(newDetails.genres);
-      if (getFlag('sellItemForTickets', true)) {
+      if (getFlag('sellItemForTickets', false)) {
         setPriceTickets(newDetails.priceTickets);
       }
     },

@@ -5,6 +5,12 @@
 	export let userId: string;
 	let disabled = false;
 	let errorMessage: string | undefined;
+	import * as rank from "../stores/rank";
+	rank.promise.then(() => {
+		if (!rank.is("admin")) {
+			errorMessage = "You must have the administrator permission to manage currency.";
+		}
+	});
 </script>
 
 <style>
@@ -58,33 +64,8 @@
 				}}>Give Robux</button
 			>
 		</div>
-		<div class="col-12 mt-4">
-			<button
-				class="btn btn-danger"
-				{disabled}
-				on:click={(e) => {
-					e.preventDefault();
-					if (disabled) {
-						return;
-					}
-					// @ts-ignore
-					let robux = document.getElementById("robux-amount").value;
-					disabled = true;
-					request
-						.post("/removerobux", {
-							userId,
-							robux,
-						})
-						.then((d) => {
-							navigate("/admin/manage-user/" + userId);
-						})
-						.catch((e) => {
-							errorMessage = e.message;
-						})
-						.finally(() => {
-							disabled = false;
-						});
-				}}>Remove Robux</button>
+		<div class="col-12 mt-4 mb-4">
+			<hr />
 		</div>
 		<div class="col-12">
 			<label for="message-subject">Tickets Amount</label>
@@ -118,34 +99,6 @@
 						});
 				}}>Give Tickets</button
 			>
-		</div>
-		<div class="col-12 mt-4">
-			<button
-				class="btn btn-danger"
-				{disabled}
-				on:click={(e) => {
-					e.preventDefault();
-					if (disabled) {
-						return;
-					}
-					// @ts-ignore
-					let amt = document.getElementById("tickets-amount").value;
-					disabled = true;
-					request
-						.post("/removetickets", {
-							userId,
-							tickets: amt,
-						})
-						.then((d) => {
-							navigate("/admin/manage-user/" + userId);
-						})
-						.catch((e) => {
-							errorMessage = e.message;
-						})
-						.finally(() => {
-							disabled = false;
-						});
-				}}>Remove Tickets</button>
 		</div>
 	</div>
 </Main>

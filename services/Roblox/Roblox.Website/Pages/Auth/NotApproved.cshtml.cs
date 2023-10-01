@@ -26,7 +26,7 @@ public class NotApproved : RobloxPageModel
             // TODO: Report this - means accountStatus is invalid or ban doesn't exist when it should.
             ban = new()
             {
-                reason = "You are not banned, this is a fake ban inserted while the system takes a few seconds to unban.",
+                reason = "Reason was not specified. Please contact us via our contact page.",
                 createdAt = DateTime.UtcNow,
             };
         }

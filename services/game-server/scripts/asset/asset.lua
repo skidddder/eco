@@ -1,7 +1,7 @@
 local assetId = {1234};
 local jobId = "InsertJobIdHere";
 local mode = "R6";
-local baseURL = "http://economy-simulator.org";
+local baseURL = "http://localhost";
 local uploadURL = "UPLOAD_URL_HERE";
 local ScriptContext = game:GetService("ScriptContext");
 local Lighting = game:GetService('Lighting');
@@ -15,7 +15,7 @@ game:GetService('ThumbnailGenerator').GraphicsMode = 2;
 HttpService.HttpEnabled = true;
 ScriptContext.ScriptsDisabled = true
 Lighting.Outlines = false
-ContentProvider:SetBaseUrl('http://economy-simulator.org')
+ContentProvider:SetBaseUrl('http://localhost')
 
     local function render()
         local model = Instance.new("Model");
@@ -26,31 +26,12 @@ ContentProvider:SetBaseUrl('http://economy-simulator.org')
             end
         end
         model.Parent = game.Workspace
-        
-        local assetModel
 
-        -- get assetmodel
-
-        for i,v in pairs(model:GetChildren()) do
-            if v:IsA("Accessory") or v:IsA("Tool") or v:IsA("Hat") then
-                assetModel = v
-            end
+        local cam = model:FindFirstDescendant("ThumbnailCamera")
+        if cam then
+            print("[info] use thumbnail camera")
+            cam.Parent = game.Workspace:GetChildren()[1];
         end
-
-        -- check for thumbnailcamera
-
-        if assetModel:FindFirstChild("ThumbnailCamera") then
-            print("Has ThumbnailCamera, now using it")
-            camera = assetModel:WaitForChild("ThumbnailCamera")
-            camera.Parent = model
-        else
-            camera = Instance.new("Camera", model)-- Instance.new("Camera", player.Character)
-        end
-
-        -- set the cam
-
-
-        workspace.CurrentCamera = camera
 
         print("[debug] render test asset")
         -- We render twice to correct some weird bugs when rendering assets specifically - meshes only seem to load after the second attempt(?)
@@ -58,7 +39,7 @@ ContentProvider:SetBaseUrl('http://economy-simulator.org')
         -- realistically, Click() is fast enough to be called twice without affecting performance much.
         ThumbnailGenerator:Click('png', 1, 1, true, false)
         -- "fileType", "width", "height", "hideSky", "doCameraZoom"
-        local encoded = ThumbnailGenerator:Click('png', _X_RES_, _Y_RES_, true, true)
+        local encoded = ThumbnailGenerator:Click('png', _X_RES_, _Y_RES_, true, false)
         print("[debug] send post request containing test asset")
 
         local ok, data = pcall(function()
@@ -77,4 +58,4 @@ ContentProvider:SetBaseUrl('http://economy-simulator.org')
         return render()
     end)
     print(ok, data);
-    print("[debug] exit asset render game");
+    print("[debug] exit game");

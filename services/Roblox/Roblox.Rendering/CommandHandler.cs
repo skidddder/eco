@@ -150,7 +150,7 @@ namespace Roblox.Rendering
             var bits = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(cmd));
             while (ws is not {State: WebSocketState.Open})
             {
-                //Writer.Info(LogGroup.GeneralRender, "Ws not available, retry in a second");
+                Writer.Info(LogGroup.GeneralRender, "Ws not available, retry in a second");
 #if DEBUG 
                 await Task.Delay(TimeSpan.FromSeconds(60), cancellationToken  ?? CancellationToken.None);
 #else
@@ -241,14 +241,6 @@ namespace Roblox.Rendering
             }, cancellationToken);
         }
         
-
-        public static async Task<Stream> RequestHeadThumbnail(long assetId, CancellationToken? cancellationToken = null)
-        {
-            return await SendCmdWithErrHandlingAsync("GenerateThumbnailHead", new List<dynamic>
-            {
-                assetId, 
-            }, cancellationToken);
-        }
         public static async Task<Stream> RequestAssetMesh(long assetId, CancellationToken? cancellationToken = null)
         {
             return await SendCmdWithErrHandlingAsync("GenerateThumbnailMesh", new List<dynamic>

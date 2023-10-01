@@ -479,11 +479,11 @@ public class GroupsService : ServiceBase, IService
     // Example URL: https://discord.gg/abcd123
     private static readonly Regex DiscordUrlRegex = new Regex("https?:\\/\\/discord.gg\\/[0-9a-zA-Z]+");
 
-    // Example URL (www is optional): http://localhost:3000/groups/1/name#!/about
-    private static readonly Regex RobloxGroupUrlRegex = new("http:\\/\\/(www\\.)?localhost:3000\\/groups\\/[0-9]+\\/[a-zA-Z\\-0-9]+", RegexOptions.IgnoreCase);
-
-    // Example URL (www is optional): http://localhost:3000/My/Groups.aspx?gid=4
-    private static readonly Regex RobloxGroupUrlRegexOld = new("http:\\/\\/(www\\.)?localhost:3000\\/my\\/groups\\.aspx\\?gid=[0-9]+", RegexOptions.IgnoreCase);
+    // Example URL (www is optional): https://www.example.com/groups/1/name#!/about
+    private static readonly Regex RobloxGroupUrlRegex = new("https:\\/\\/(www\\.)?example.com\\/groups\\/[0-9]+\\/[a-zA-Z\\-0-9]+", RegexOptions.IgnoreCase);
+    
+    // Example URL (www is optional): https://example.com/My/Groups.aspx?gid=4
+    private static readonly Regex RobloxGroupUrlRegexOld = new("https:\\/\\/(www\\.)?example.com\\/my\\/groups\\.aspx\\?gid=[0-9]+", RegexOptions.IgnoreCase);
 
     private bool IsLinkValid(SocialLinkType type, string url, string title)
     {
@@ -1564,8 +1564,8 @@ public class GroupsService : ServiceBase, IService
         if (!perms)
             throw new RobloxException(401, 0, "Unauthorized");
         // limit to group owner for now
-        //if (recipientUserId != actorUserId)
-        //    throw new RobloxException(400, 0, "Group payouts can only be made to the group owner at this time");
+        if (recipientUserId != actorUserId)
+            throw new RobloxException(400, 0, "Group payouts can only be made to the group owner at this time");
         if (amount <= 0)
             throw new RobloxException(400, 0, "Invalid amount");
         if (!Enum.IsDefined(currency))

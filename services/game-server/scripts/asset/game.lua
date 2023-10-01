@@ -1,7 +1,7 @@
 local assetId = {1234};
 local jobId = "InsertJobIdHere";
 local mode = "R6";
-local baseURL = "http://economy-simulator.org";
+local baseURL = "http://localhost";
 local uploadURL = "UPLOAD_URL_HERE";
 local ScriptContext = game:GetService("ScriptContext");
 local Lighting = game:GetService('Lighting');
@@ -15,16 +15,16 @@ game:GetService('ThumbnailGenerator').GraphicsMode = 2;
 HttpService.HttpEnabled = true;
 ScriptContext.ScriptsDisabled = true
 Lighting.Outlines = false
-ContentProvider:SetBaseUrl('http://economy-simulator.org')
+ContentProvider:SetBaseUrl('http://localhost')
 print(ContentProvider.BaseUrl)
-game:GetService("ContentProvider"):SetAssetUrl(baseURL .. "/asset/")
-game:GetService("InsertService"):SetAssetUrl(baseURL .. "/asset/?id=%d")
-pcall(function() game:GetService("ScriptInformationProvider"):SetAssetUrl(url .. "/asset/") end)
+game:GetService("ContentProvider"):SetAssetUrl(baseURL .. "/Asset/")
+game:GetService("InsertService"):SetAssetUrl(baseURL .. "/Asset/?id=%d")
+pcall(function() game:GetService("ScriptInformationProvider"):SetAssetUrl(url .. "/Asset/") end)
 game:GetService("ContentProvider"):SetBaseUrl(baseURL .. "/")
 Players:SetChatFilterUrl(baseURL .. "/Game/ChatFilter.ashx")
 local Insert = game:GetService("InsertService")
-game:GetService("InsertService"):SetAssetUrl(baseURL .. "/asset/?id=%d")
-game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/asset/?assetversionid=%d")
+game:GetService("InsertService"):SetAssetUrl(baseURL .. "/Asset/?id=%d")
+game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/Asset/?assetversionid=%d")
 
 local didRun = false
 local assetId = assetId[1];
@@ -55,10 +55,11 @@ local assetId = assetId[1];
             end
         end)
         print("load game...")
-        local s,e = pcall(function()
+        pcall(function()
             game:Load(baseURL .. "/asset/?id=" .. assetId)
         end)
         print("game load over")
+        render()
     end)
     print(ok, data);
     print("[debug] exit game");

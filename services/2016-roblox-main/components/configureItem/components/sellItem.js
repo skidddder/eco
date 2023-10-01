@@ -107,7 +107,7 @@ const SellItem = props => {
       <p className='d-inline ms-2'>Sell this item</p>
     </div>
     <SellItemCurrency currency={1} />
-    <SellItemCurrency currency={2}/>
+    {getFlag('sellItemForTickets', false) ? <SellItemCurrency currency={2} /> : null}
   </div>
 }
 

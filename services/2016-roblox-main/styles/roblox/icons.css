@@ -387,6 +387,7 @@ a.btn-generic-edit-xs:hover .icon-edit {
 	vertical-align: middle;
 }
 
+.icon-default-badges,
 .icon-inviter,
 .icon-friendship,
 .icon-welcome-to-the-club,
@@ -401,11 +402,10 @@ a.btn-generic-edit-xs:hover .icon-edit {
 .icon-turbo-builders-club,
 .icon-outrageous-builders-club,
 .icon-administrator,
-.icon-veteran
-{
+.icon-veteran {
 	background-image: url(/img/roblox_badges.svg);
 	background-repeat: no-repeat;
-	background-size: 280px;
+	background-size: 280px auto;
 	width: 140px;
 	height: 140px;
 	display: inline-block;

@@ -515,7 +515,7 @@ public class AvatarService : ServiceBase, IService
     }
 
     public async Task RedrawAvatar(long userId, IEnumerable<long>? newAssetIds = null, ColorEntry? colors = null,
-        AvatarType? avatarType = null, bool forceRedraw = false, bool ignoreLock = true)
+        AvatarType? avatarType = null, bool forceRedraw = false, bool ignoreLock = false)
     {
         // required services
         using var assets = ServiceProvider.GetOrCreate<AssetsService>();
@@ -589,9 +589,9 @@ public class AvatarService : ServiceBase, IService
             },
             playerAvatarType = "R6",
         };
-        // Sane timeout of 30 minutes. If a render takes longer than this, something's probably broken
+        // Sane timeout of 2 minutes. If a render takes longer than this, something's probably broken
         using var cancellation = new CancellationTokenSource();
-        cancellation.CancelAfter(TimeSpan.FromSeconds(30));
+        cancellation.CancelAfter(TimeSpan.FromMinutes(2));
         // Make both requests at once
         var result = await Task.WhenAll(new List<Task<Stream>>()
         {

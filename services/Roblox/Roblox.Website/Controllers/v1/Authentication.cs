@@ -92,11 +92,8 @@ public class AuthenticationController : ControllerBase
         if (!nameAvailable) 
             throw new BadRequestException(10, "This username is already in use");
         var previous = await services.users.GetPreviousUsernames(userSession.userId);
-
-        // Disabled the 1 hour username cooldown
-
-        if (previous.Count(c => c.createdAt >= DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1))) >= 1)
-            throw new TooManyRequestsException(0, "You are on username change cooldown");
+        if (previous.Count(c => c.createdAt >= DateTime.UtcNow.Subtract(TimeSpan.FromHours(1))) >= 1)
+            throw new TooManyRequestsException(0, "Too many attempts");
         // charge user, then change name
         await services.users.ChangeUsername(userSession.userId, req.username, userSession.username);
         userSession.username = req.username;

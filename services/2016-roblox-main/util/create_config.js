@@ -27,7 +27,7 @@ const main = () => {
           friendsPageLimit: 25,
           settingsPageThemeSelectorEnabled: true,
           tradeWindowInventoryCollectibleLimit: 10,
-          moneyPagePromotionTabVisible: true,
+          moneyPagePromotionTabVisible: false,
           gameGenreFilterMethod: 'keyword',
           gameGenreFilterSupported: true,
           avatarPageOutfitCreatedAtAvailable: false,

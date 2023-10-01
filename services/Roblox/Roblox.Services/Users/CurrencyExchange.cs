@@ -287,6 +287,13 @@ public class CurrencyExchangeService : ServiceBase, IService
                 break;
             }
         }
+
+        if (balance != 0 && isMarketOrder)
+        {
+            throw new RobloxException(400, 0,
+                "Order could not be completed due to a lack of sellers. Try again in a little bit.");
+        }
+
     }
 
     public async Task CloseOrder(long userId, long orderId)
@@ -358,7 +365,8 @@ public class CurrencyExchangeService : ServiceBase, IService
         return result != null && result.total > 10;
     }
 
-    public async Task PlaceOrder(long userId, long amount, long exchangeRate1K, CurrencyType sourceCurrency, bool isMarketOrder)
+    public async Task PlaceOrder(long userId, long amount, long exchangeRate1K, CurrencyType sourceCurrency,
+        bool isMarketOrder)
     {
         if (exchangeRate1K <= 0 || exchangeRate1K >= (1000 * 10000))
             throw new RobloxException(400, 0, "BadRequest");

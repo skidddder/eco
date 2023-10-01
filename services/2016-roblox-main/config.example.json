@@ -9,7 +9,7 @@
         "myAccountPage2016Enabled": true,
         "catalogGenreFilterSupported": true,
         "catalogPageLimit": 28,
-        "catalogSaleCountVisibleFromDetailsEndpoint": true,
+        "catalogSaleCountVisibleFromDetailsEndpoint": false,
         "catalogDetailsPageResellerLimit": 10,
         "avatarPageInventoryLimit": 10
       },

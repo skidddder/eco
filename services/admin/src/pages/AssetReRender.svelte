@@ -42,7 +42,7 @@
 					request
 						.post("/asset/re-render", { assetId: document.getElementById("assetid").value })
 						.then((d) => {
-							alert("Render requested");
+							alert("Render requesed");
 						})
 						.catch((e) => {
 							errorMessage = e.message;

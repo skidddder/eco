@@ -453,7 +453,7 @@ public class WebController : ControllerBase
     [HttpGet("game/get-join-script")]
     public async Task<dynamic> GetJoinScript(long placeId)
     {
-#if RELEASE
+#if DEBUG
         // TODO: Rate limit, or caching, or something
         var placeInfo = await services.assets.GetAssetCatalogInfo(placeId);
         if (placeInfo.assetType != Models.Assets.Type.Place) throw new BadRequestException();
@@ -467,9 +467,7 @@ public class WebController : ControllerBase
             $"--authenticationUrl {Roblox.Configuration.BaseUrl}/Login/Negotiate.ashx --authenticationTicket {ticket} --joinScriptUrl {Configuration.BaseUrl}/placelauncher.ashx?ticket={encodedTicket}";
         return new
         {
-            //authenticationTicket = ticket,
             joinScriptUrl = Configuration.BaseUrl + "/placelauncher.ashx?ticket=" + encodedTicket, 
-            retroArgs = args,
         };
 #else
         throw new Exception("Feature disabled");

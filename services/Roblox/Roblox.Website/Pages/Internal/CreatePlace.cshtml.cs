@@ -226,7 +226,7 @@ public class CreatePlace : RobloxPageModel
             return PlaceCreationFailureReason.TooInactive;
         }
 
-        if (!await IsActiveEnoughForPlace(userId))
+        if (await IsActiveEnoughForPlace(userId))
         {
             log.Info("user is active enough for a place. return OK");
             return PlaceCreationFailureReason.Ok;
@@ -289,6 +289,6 @@ public class CreatePlace : RobloxPageModel
         // create universe too
         await services.games.CreateUniverse(asset.placeId);
         // give url
-        successUrl = "http://:economy-simulator.org/internal/place-update?id=" + asset.placeId;
+        successUrl = "https://example.com/internal/place-update?id=" + asset.placeId;
     }
 }

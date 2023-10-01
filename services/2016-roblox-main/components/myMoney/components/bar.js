@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import getFlag from "../../../lib/getFlag";
 import OldVerticalTabs from "../../oldVerticalTabs"
@@ -19,10 +18,10 @@ const Bar = props => {
       name: 'Summary',
       element: <MySummaryTable></MySummaryTable>,
     },
-    {
+    getFlag('currencyExchangeEnabled', false) ? {
       name: 'Trade Currency',
       element: <CurrencyExchange></CurrencyExchange>,
-    },
+    } : undefined,
     {
       name: 'Trade Items',
       element: <MyTradesTable></MyTradesTable>,

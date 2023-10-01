@@ -5,7 +5,6 @@
 
 	import Main from "../components/templates/Main.svelte";
 	import request from "../lib/request";
-	import moment from "../lib/moment";
 	let playersData = [];
 	let sortColumn = "user.id";
 	let sortMode = "asc";
@@ -264,8 +263,8 @@
 							</td>
 							<td><a use:link href={`/admin/manage-user/${i.id}`}>{i.id}</a></td>
 							<td><a use:link href={`/admin/manage-user/${i.id}`}>{i.username}</a></td>
-							<td>{moment(i.created_at).format("MMM DD YYYY, h:mm A")}</td>
-							<td>{moment(i.online_at).format("MMM DD YYYY, h:mm A")}</td>
+							<td>{i.created_at}</td>
+							<td>{i.online_at}</td>
 							<td>
 								{#if i.status === "Ok"}
 									<span class="badge bg-success">OK</span>

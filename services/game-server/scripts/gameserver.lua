@@ -4,9 +4,9 @@ local http = game:GetService("HttpService");
 http.HttpEnabled = false;
 
 -- begin dynamiclly edited
-local url = "https://economy-simulator.org";
-local port = 64989;
-local placeId = 5;
+local url = "base_url";
+local port = 123;
+local placeId = 123;
 local creatorType = Enum.CreatorType.User;
 local creatorId = 1;
 local placeVersionId = 0;
@@ -223,7 +223,7 @@ spawn(function()
 	end
 	pcall(function()
 		adminsList = {}
-		adminsList[3] = true -- 3 is hard coded as admin but doesn't show badge
+		adminsList[12] = true -- 12 is hard coded as admin but doesn't show badge
 		for i,v in ipairs(newList) do
 			adminsList[v] = true
 		end

@@ -7,6 +7,7 @@ using Xunit;
 
 public class CurrencyExchangeTest : TestBase
 {
+    [Fact]
     public async Task MarketOrderWithMultipleSellers()
     {
         var buyer = await CreateRandomUser();
@@ -42,6 +43,7 @@ public class CurrencyExchangeTest : TestBase
         Assert.Empty(pos);
     }
 
+    [Fact]
     public async Task CreateTicketBuyOrder()
     {
         var buyer = await CreateRandomUser();
@@ -77,6 +79,7 @@ public class CurrencyExchangeTest : TestBase
         Assert.Empty(pos);
     }
     
+    [Fact]
     public async Task CreateRobuxBuyOrder()
     {
         var buyer = await CreateRandomUser();
@@ -112,6 +115,7 @@ public class CurrencyExchangeTest : TestBase
         Assert.Empty(pos);
     }
     
+    [Fact]
     public async Task CreateRobuxBuyOrder_BadAmounts()
     {
         var seller = await CreateRandomUser();

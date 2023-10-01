@@ -9,21 +9,20 @@ const UrlUtilities = (() => {
       return baseDomainParsed.domain + '.' + baseDomainParsed.topLevelDomains.join('.');
     } else if (baseDomainParsed.type === ParseResultType.Ip) {
       return baseDomainParsed.hostname;
-      console.log(baseDomainParsed.hostname)
     }else if (baseDomainParsed.type === ParseResultType.Reserved) {
-      if (baseDomainParsed.hostname === 'economy-simulator.org') {
-        return 'economy-simulator.org';
+      if (baseDomainParsed.hostname === 'localhost') {
+        return 'localhost';
       }
-      throw new Error('The only allowed reserved domain type is economy-simulator.org, got ' + baseDomainParsed.hostname);
+      throw new Error('The only allowed reserved domain type is localhost, got ' + baseDomainParsed.hostname);
     } else {
-      //throw new Error('Unsupported domain type: ' + baseDomainParsed.type);
+      throw new Error('Unsupported domain type: ' + baseDomainParsed.type);
     }
   }
-  const baseWithDomainAndTld = getDomainFromUrl(getBaseUrl())
+  const baseWithDomainAndTld = getDomainFromUrl(getBaseUrl()).toLowerCase();
 
   return {
     isSafe: (rawUrl) => {
-      const parsedWithDomainAndTld = getDomainFromUrl(rawUrl)
+      const parsedWithDomainAndTld = getDomainFromUrl(rawUrl).toLowerCase();
       return parsedWithDomainAndTld === baseWithDomainAndTld;
     },
   }
@@ -70,10 +69,10 @@ const actualHandler = async (req, res) => {
       if (item === 'set-cookie') {
         // TODO: "localhost" needs to be configurable
         if (typeof value === 'string') {
-          value = value.replace(/roblox\.com/g, 'economy-simulator.org');
+          value = value.replace(/roblox\.com/g, 'localhost');
         } else {
           value.forEach((v, i, arr) => {
-            arr[i] = v.replace(/roblox\.com/g, 'economy-simulator.org');
+            arr[i] = v.replace(/roblox\.com/g, 'localhost');
           });
         }
       }

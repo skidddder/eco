@@ -111,7 +111,7 @@
 							</div>
 							{#if info.data.status !== "Ok"}
 								<div class="card card-body card-header bg-danger">
-									{#if info.data.status === 'Suppressed'}
+									{#if info.data.status === 'Supressed'}
 									<p class="mb-0">This account is temporarily banned.</p>
 									{:else if info.data.status === 'Deleted'}
 									<p class="mb-0">This account is deleted.</p>
@@ -413,9 +413,7 @@
 				{#if rank.hasPermission("GiveUserBadge") || rank.hasPermission("DeleteUserBadge")}
 					<a use:link class="btn-outline-dark btn w-100" href={`/admin/manage-badges-user/${userId}`}><AwardIcon /> Manage Badges</a>
 				{/if}
-				<Permission p="GetUserModerationHistory">
-					<a use:link class="btn-outline-dark btn w-100" href={`/admin/moderation-history/${userId}`}><DatabaseIcon /> Moderation History</a>
-				</Permission>
+
 				<Permission p="DeleteUsername">
 					<a use:link class="btn-outline-dark btn w-100" href={`/admin/manage-usernames/${userId}`}><MailIcon /> Manage Usernames</a>
 				</Permission>

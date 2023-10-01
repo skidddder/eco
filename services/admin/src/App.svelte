@@ -29,8 +29,8 @@
 import Lottery from "./pages/Lottery.svelte";
 import FeatureFlags from "./pages/FeatureFlags.svelte";
 import ManageUserTransactions from "./pages/ManageUserTransactions.svelte";
-import UserModerationHistory from "./pages/ViewModerationHistory.svelte";
 import Applications from "./pages/Applications.svelte";
+import Reference from "./pages/Reference.svelte";
 import ForumPosts from "./pages/TextModeration.svelte";
 import Groups from "./pages/Groups.svelte";
 import GameHistory from "./pages/GameHistory.svelte";
@@ -39,8 +39,8 @@ import ManageUserTrades from "./pages/ManageUserTrades.svelte";
 import TrackUserAsset from "./pages/TrackUserAsset.svelte";
 import AbuseReports from "./pages/AbuseReports.svelte";
 import ResolveAsset from "./pages/ResolveAsset.svelte";
+import CopyRobloxBundle from "./pages/CopyRobloxBundle.svelte";
 import Permissions from "./pages/Permissions.svelte";
-import ForceApplication from "./pages/ForceApplication.svelte";
 	// import 'bootstrap';
 
 	var pushState = history.pushState;
@@ -88,9 +88,6 @@ import ForceApplication from "./pages/ForceApplication.svelte";
 		<Route path="/admin/user-transactions/:userId" let:params>
 			<ManageUserTransactions userId={params.userId} />
 		</Route>
-		<Route path="/admin/moderation-history/:userId" let:params>
-			<UserModerationHistory userId={params.userId} />
-		</Route>
 		<Route path="/admin/user-trades/:userId" let:params>
 			<ManageUserTrades userId={params.userId} />
 		</Route>
@@ -102,9 +99,6 @@ import ForceApplication from "./pages/ForceApplication.svelte";
 		</Route>
 		<Route path="/admin/user/create">
 			<CreatePlayer />
-		</Route>
-		<Route path="/admin/force-application">
-			<ForceApplication />
 		</Route>
 		<Route path="/admin/memos">
 			<Memos />
@@ -130,6 +124,9 @@ import ForceApplication from "./pages/ForceApplication.svelte";
 		<Route path="/admin/asset/copy">
 			<CopyRobloxClothing />
 		</Route>
+		<Route path="/admin/bundle/copy">
+			<CopyRobloxBundle />
+		</Route>
 		<Route path="/admin/asset/approval">
 			<AssetApproval />
 		</Route>
@@ -144,6 +141,9 @@ import ForceApplication from "./pages/ForceApplication.svelte";
 		</Route>
 		<Route path="/admin/applications/:id" let:params>
 			<Applications id={params.id} />
+		</Route>
+		<Route path="/admin/reference">
+			<Reference />
 		</Route>
 		<Route path="/admin/text-posts">
 			<ForumPosts />

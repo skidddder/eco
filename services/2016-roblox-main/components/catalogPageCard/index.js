@@ -212,7 +212,7 @@ const CatalogPageCard = props => {
         <p className={s.detailsEntry}>
           <span className={s.detailsKey}>Sales: </span>
           <span className={s.detailsValue}>
-            {getFlag('catalogSaleCountVisibleFromDetailsEndpoint', true) ? props.saleCount.toLocaleString() : 0}
+            {getFlag('catalogSaleCountVisibleFromDetailsEndpoint', false) ? props.saleCount.toLocaleString() : 0}
           </span>
         </p>
         <p className={s.detailsEntry}>

@@ -2,8 +2,7 @@ local jobId = "InsertJobIdHere";
 local assetId = 65789275746246;
 local assetType = 358843;
 local mode = "R6";
-local baseURL = "https://economy-simulator.org";
-local goToAsset = "/asset/?id="
+local baseURL = "http://localhost";
 local uploadURL = "UPLOAD_URL_HERE";
 local ScriptContext = game:GetService("ScriptContext");
 local Lighting = game:GetService('Lighting');
@@ -17,25 +16,22 @@ game:GetService('ThumbnailGenerator').GraphicsMode = 2;
 HttpService.HttpEnabled = true;
 ScriptContext.ScriptsDisabled = true
 Lighting.Outlines = false
-ContentProvider:SetBaseUrl(baseURL)
+ContentProvider:SetBaseUrl('http://localhost')
 print(ContentProvider.BaseUrl)
-game:GetService("ContentProvider"):SetAssetUrl(baseURL)
-game:GetService("InsertService"):SetAssetUrl(baseURL .. "/asset/")
-pcall(function() game:GetService("ScriptInformationProvider"):SetAssetUrl(url .. "/asset/") end)
+game:GetService("ContentProvider"):SetAssetUrl(baseURL .. "/Asset/")
+game:GetService("InsertService"):SetAssetUrl(baseURL .. "/Asset/?id=%d")
+pcall(function() game:GetService("ScriptInformationProvider"):SetAssetUrl(url .. "/Asset/") end)
 game:GetService("ContentProvider"):SetBaseUrl(baseURL .. "/")
 Players:SetChatFilterUrl(baseURL .. "/Game/ChatFilter.ashx")
 local Insert = game:GetService("InsertService")
-game:GetService("InsertService"):SetAssetUrl(baseURL .. "/asset/?id=%d")
+game:GetService("InsertService"):SetAssetUrl(baseURL .. "/Asset/?id=%d")
 game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/Asset/?assetversionid=%d")
-
-game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/asset/?assetversionid=%d")
 
     local function render(id)
 
         print("[debug] render image - type",assetType, "id",assetId)
-        local assetUrl = baseURL .. goToAsset .. assetId;
+        local assetUrl = "rbxassetid://" .. assetId;
         if assetType == 18 then
-            assetUrl = baseURL .. goToAsset .. assetId
             local ok, image = pcall(function() 
                 return Insert:LoadAsset(assetId):GetChildren()[1]
             end)
@@ -68,7 +64,7 @@ game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/asset/?assetver
     end
 
     local ok, data = pcall(function()
-        render(assetId)
+        render(1)
     end)
     print(ok, data);
     print("[debug] exit game");

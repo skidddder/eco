@@ -1,7 +1,7 @@
 local jobId = "InsertJobIdHere";
 local userId = 65789275746246;
 local mode = "R6";
-local baseURL = "http://economy-simulator.org";
+local baseURL = "http://localhost";
 local uploadURL = "UPLOAD_URL_HERE";
 local ScriptContext = game:GetService("ScriptContext");
 local Lighting = game:GetService('Lighting');
@@ -15,9 +15,7 @@ game:GetService('ThumbnailGenerator').GraphicsMode = 2;
 HttpService.HttpEnabled = true;
 ScriptContext.ScriptsDisabled = true
 Lighting.Outlines = false
-ContentProvider:SetBaseUrl('http://economy-simulator.org')
-game:GetService("InsertService"):SetAssetUrl(baseURL .. "/asset/?id=%d")
-game:GetService("InsertService"):SetAssetVersionUrl(baseURL .. "/Asset/?assetversionid=%d")
+ContentProvider:SetBaseUrl('http://localhost')
 local Insert = game:GetService("InsertService")
 
 local function applyMesh(Player, children, limb)
@@ -45,8 +43,14 @@ local function applyPackage(Player, children)
     local ok, msg = pcall(function() 
         print("applyPackage children", children, #children)
         for _, asset in pairs(children) do
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Child package",asset)
-            asset.Parent = Player.Character
+             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Child package",asset)
+             if asset.Name == "R6" then
+                print("!!!!!!!!!!!!!!!!!!! GOT R6",asset)
+                local otherChildren = asset:GetChildren()
+                print("other",otherChildren, #otherChildren)
+                print(otherChildren[1].Name)
+                otherChildren[1].Parent = Player.Character
+             end
         end
     end)
     if not ok then
@@ -140,8 +144,8 @@ end
 
         for _, object in pairs(Player.Character:GetChildren()) do
             if object:IsA('Tool') then
-                print("Player has gear, raise the right arm out.")
-                Player.Character.Torso['Right Shoulder'].CurrentAngle = math.rad(90)
+                print("[debug] player has a tool - set arm angle (R6)")
+                Player.Character.Torso['Right Shoulder'].CurrentAngle = math.pi / 2
             end
         end
 

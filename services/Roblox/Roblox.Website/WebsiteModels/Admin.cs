@@ -18,12 +18,6 @@ public class CreateUserRequest
     public long userId { get; set; }
 }
 
-public class ForceApplicationReq
-{
-    public long userId { get; set; }
-    public string? socialURL { get; set; }
-}
-
 public class PendingAssetEntry
 {
     public long id { get; set; }
@@ -143,13 +137,6 @@ public class UpdateProductRequest
     public int? priceTickets { get; set; }
     public int? maxCopies { get; set; }
     public DateTime? offsaleDeadline { get; set; }
-}
-
-public class UpdateNameRequest
-{
-    // TODO: Add Description Support.
-    public long assetId { get; set; }
-    public string newName { get; set; }
 }
 
 

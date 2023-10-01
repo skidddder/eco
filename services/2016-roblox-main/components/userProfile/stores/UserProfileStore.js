@@ -31,7 +31,7 @@ const UserProfileStore = createContainer(() => {
       setLastError('InvalidUserId');
     });
     getPreviousUsernames({ userId: userId }).then(setPreviousNames);
-    if (getFlag('userProfileUserStatusEnabled', true))
+    if (getFlag('userProfileUserStatusEnabled', false))
       getUserStatus({ userId }).then(setStatus);
     getFollowersCount({ userId }).then(setFollowersCount);
     getFollowingsCount({ userId }).then(setFollowingsCount);

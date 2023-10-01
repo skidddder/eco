@@ -6,7 +6,7 @@ using Roblox.Models;
 namespace Roblox.Website.Controllers;
 
 [ApiController]
-[Route("apisite/inventory/v2")]
+[Route("/apisite/inventory/v2")]
 public class InventoryControllerV2 : ControllerBase
 {
     [HttpGet("assets/{assetId:long}/owners")]

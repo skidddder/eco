@@ -9,14 +9,14 @@ export const uploadAsset = ({ name, assetTypeId, file, groupId }) => {
   if (groupId) {
     formData.append('groupId', groupId);
   }
-  return request('POST', getBaseUrl() + 'develop/upload', formData);
+  return request('POST', getBaseUrl() + '/develop/upload', formData);
 }
 
 export const uploadAssetVersion = ({assetId, file}) => {
   let form = new FormData();
   form.append('assetId', assetId);
   form.append('file', file);
-  return request('POST', getBaseUrl() + 'develop/upload-version', form);
+  return request('POST', getBaseUrl() + '/develop/upload-version', form);
 }
 
 export const getCreatedAssetDetails = (assetIds) => {
@@ -55,7 +55,7 @@ export const setAssetPrice = async ({assetId, priceInRobux, priceInTickets}) => 
   let obj = {
     priceInRobux, 
   };
-  if (getFlag('sellItemForTickets', true)) {
+  if (getFlag('sellItemForTickets', false)) {
     obj.priceInTickets = priceInTickets;
   }
   return await request('POST', getFullUrl('itemconfiguration', `/v1/assets/${assetId}/update-price`), obj);

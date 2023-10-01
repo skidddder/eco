@@ -14,7 +14,7 @@ public class AccountSettingsControllerV1 : ControllerBase
     {
         return new
         {
-            emailAddress = "info@economysimulator.com",
+            emailAddress = "fake-email@example.com",
             verified = true,
         };
     }

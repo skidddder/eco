@@ -37,7 +37,7 @@ public class ApplicationGuardMiddleware
         "/auth/ticket",
         "/auth/application-check",
         // razor public
-        "/UnsecuredContent",
+        "/unsecuredcontent/",
         // gs
         "/gs/activity",
         "/gs/ping",
@@ -50,7 +50,6 @@ public class ApplicationGuardMiddleware
         "/game/validateticket.ashx",
         "/game/get-join-script-debug",
         "/api/moderation/filtertext"
-        // for forums or they don't work properly
     };
 
     public static void Configure(string authorizationString)
@@ -370,8 +369,8 @@ public class ApplicationGuardMiddleware
         var isAuthorized = IsAuthorized(ctx);
         authTimer.Stop();
 
-        if (isAuthorized || allowedUrls.Contains(normalizedPath) /*||
-            RobloxPlayerDataRegex.IsMatch(normalizedPath)*/)
+        if (isAuthorized || allowedUrls.Contains(normalizedPath) ||
+            RobloxPlayerDataRegex.IsMatch(normalizedPath))
             {
                 appGuardTimer.Stop();
                 await _next(ctx);

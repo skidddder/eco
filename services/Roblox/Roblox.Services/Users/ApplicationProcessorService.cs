@@ -5,7 +5,6 @@ using Roblox.Logging;
 namespace Roblox.Services;
 
 public class ApplicationProcessorService : ServiceBase, IService
-// autoaccept
 {
 
     public async Task AttemptBackgroundApplicationProcess(UserApplicationEntry entry, AppSocialMedia media)
@@ -117,7 +116,7 @@ public class ApplicationProcessorService : ServiceBase, IService
                 var profile = await api.GetProfile(userId);
                 if (profile.isPremium)
                     isRichMindset = true;
-                 
+                
                 var previousNames = profile.previousUsernames.Split("\r\n");
                 if (previousNames.Length > 2)
                     isRichMindset = true;

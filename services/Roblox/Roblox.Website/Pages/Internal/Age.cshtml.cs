@@ -22,6 +22,12 @@ public class Age : RobloxPageModel
     
     public async Task OnPost()
     {
+        return;
+        if (!ageconsent)
+        {
+            return;
+        }
+
         if (await services.users.Is18Plus(userSession.userId))
             return;
 

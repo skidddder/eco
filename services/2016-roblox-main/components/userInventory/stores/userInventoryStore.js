@@ -5,7 +5,7 @@ import {getFavorites, getInventory} from "../../../services/inventory";
 import getFlag from "../../../lib/getFlag";
 
 const UserInventoryStore = createContainer(() => {
-  const limit = 24;
+  const limit = getFlag('inventoryPageLimit', 24);
   const [userId, setUserId] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [category, setCategory] = useState({name: 'Hats',

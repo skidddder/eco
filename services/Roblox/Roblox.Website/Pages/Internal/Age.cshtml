@@ -10,6 +10,12 @@
         <div class="col-12 col-lg-6 offset-lg-3">
             <div class="card card-body">
                 <h2>18+ Certification</h2>
+                @if (true)
+                {
+                    <p>Age verification is being revamped to provide a safer experience for everyone. Check back soon.</p>
+                }
+                else
+                {
                     @if (!Model.is18Plus)
                     {
                         <form method="post">
@@ -27,6 +33,7 @@
                     {
                         <p class="mt-4">Your account is marked as 18 or over. You now have access to assets marked as 18+. You cannot revoke this certification.</p>
                         <a class="btn btn-primary" href="/home">Home</a>
+                    }
                 }
             </div>
         </div>

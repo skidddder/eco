@@ -21,7 +21,6 @@
 		priceRobux: number | null;
 		priceTickets: number|null;
 		serialCount: number | null;
-		
 		offsaleAt: string | null;
 	}
 	let assetDetails: Partial<IDetailsResponse> = {};
@@ -164,7 +163,7 @@
 							isLimitedUnique = true;
 						}
 					}
-					let maxSerial = getElementById("max-copies").value || null;
+					let maxSerial = null;
 					if (getElementById("max-copies")) {
 						let maxSerial = getElementById("max-copies").value;
 						if (Number.isSafeInteger(parseInt(maxSerial, 10))) {
