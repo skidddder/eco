@@ -1,3 +1,3 @@
 # eco
 ECS/Economy simulator a Roblox revival for some reason json files get deleted
-Download the eco in the  release dont install the source
+Download the eco https://mega.nz/file/qWoB0YjT#4Gb2Wn0kBk0_2RiGIqv4ayD_IyzvzqWeookFa12dpwQ dont git clone files are missing just use the orginal src
